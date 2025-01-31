@@ -14,7 +14,9 @@ COPY . .
 
 RUN npx prisma generate
 
-RUN npx prisma migrate deploy
+RUN npx prisma db push
+
+RUN npx prisma migrate reset
 
 RUN npm run build
 

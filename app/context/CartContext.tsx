@@ -16,6 +16,7 @@ type CartContextType = {
   addToCart: (item: CartItem) => void;
   updateQuantity: (id: number, size: string | undefined, quantity: number) => void;
   removeFromCart: (id: number, size: string | undefined) => void;
+  clearCart: () => void;
   total: number;
 };
 
@@ -30,7 +31,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (storedCart) setCart(JSON.parse(storedCart));
   }, []);
   useEffect(() => {
-    console.log("Cart updated:", cart); // Лог корзины
     localStorage.setItem("cart", JSON.stringify(cart));
     setTotal(cart.reduce((sum, item) => sum + item.price * item.quantity, 0));
   }, [cart]);
@@ -47,11 +47,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       }
       return [...prev, item];
     });
-    console.log("Added to cart:", item); // Лог добавленного товара
   };
 
   const updateQuantity = (id: number, size: string | undefined, quantity: number) => {
-    if (quantity < 1) return; // Не обновляем, если количество меньше 1
+    if (quantity < 1) return; 
     setCart((prev) =>
       prev.map((item) =>
         item.id === id && item.size === size ? { ...item, quantity } : item
@@ -64,9 +63,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setCart((prev) => prev.filter((item) => item.id !== id || item.size !== size));
   };
 
+  const clearCart = () => {
+    setCart([]); 
+    localStorage.removeItem("cart"); 
+  };
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, updateQuantity, removeFromCart, total }}
+      value={{ cart, addToCart, updateQuantity, removeFromCart, clearCart, total }}
     >
       {children}
     </CartContext.Provider>

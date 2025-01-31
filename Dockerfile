@@ -16,8 +16,6 @@ RUN npx prisma generate
 
 RUN npx prisma db push
 
-RUN npx prisma migrate reset
-
 RUN npm run build
 
 FROM base AS production

@@ -16,7 +16,7 @@ RUN npx prisma generate
 
 RUN npx prisma db push
 
-RUN npx prisma migrate dev
+RUN npx prisma migrate deploy
 
 RUN npm run build
 
